@@ -4,7 +4,127 @@ import java.util.*;
 
 public class StringQuestions {
     public static void main(String[] args) {
+//        s = "leetcode", wordDict = ["leet","code"]
+        String s= "leetcode";
+        List<String> list = List.of("leet", "code");
+        System.out.println(wordBreak(s, list));
 
+
+    }
+
+    public boolean isIsomorphic(String s, String t) {
+        Map<Character, Integer> mapS= new HashMap<>();
+        Map<Character, Integer> mapT= new HashMap<>();
+
+        for (int i =0; i < s.length() ; i++){
+            int indexS= mapS.getOrDefault(s.charAt(i) , -1);
+            int indexT= mapT.getOrDefault(t.charAt(i) , -1);
+
+            if(indexS != indexT) return false;
+
+            mapS.put(s.charAt(i) , i);
+            mapT.put(t.charAt(i) , i);
+        }
+        return true;
+    }
+
+    List<List<String>> res = new ArrayList<>();
+    public List<List<String>> partition(String s) {
+        dfs(s, 0, new ArrayList<>());
+        return res;
+
+    }
+
+    void dfs(String s, int index, List<String> list){
+        if(index == s.length()){
+            res.add(new ArrayList<>(list));
+            return;
+        }
+        for (int i = index; i < s.length() ; i++){
+            if(isPalindrome(s, index, i)){
+                list.add(s.substring(index , i+1));
+
+                dfs(s, index + 1 , list);
+                list.remove(list.size() -1);
+            }
+
+        }
+    }
+
+    private boolean isPalindrome(String s, int start, int end) {
+        while (start < end){
+            if(s.charAt(start) != s.charAt(end)){
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
+    }
+
+    public static boolean wordBreak(String s, List<String> wordList) {
+        Set<String> set = new HashSet<>();
+        for (String word : wordList){
+            set.add(word);
+        }
+
+        boolean[] b = new boolean[s.length() + 1];
+        b[0] = true;
+        for (int i =1; i <= s.length() ; i++){
+            for (int j =0; j < i ; j++){
+                if(b[j] && set.contains(s.substring(j,i))){
+                    b[i] = true;
+                    break;
+                }
+
+            }
+            System.out.println(i + "= " +b[i]);
+
+        }
+
+        return b[s.length()];
+    }
+
+    public String multiply(String num1, String num2) {
+        if("0".equals(num1) || "0".equals(num2)) return "0";
+        int[] ans = new int[num1.length() + num2.length() - 1];
+        for (int i = 0; i < num1.length(); i++) {
+            for (int j = 0; j < num2.length(); j++) {
+                ans[i + j] = (num1.charAt(i) - '0') * (num2.charAt(j) - '0');
+            }
+        }
+
+        for (int i = ans.length - 1; i >= 0; i--) {
+            ans[i - 1] += ans[i] / 10;
+            ans[i] = ans[i] % 10;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i : ans) {
+            sb.append(i);
+        }
+
+        return sb.toString();
+
+    }
+
+    public List<String> generateParenthesis(int n) {
+        List<String> res = new ArrayList<>();
+        helper(n, "", 0, 0, res);
+        return res;
+    }
+
+    public void helper(int max, String current, int open, int close, List<String> res) {
+        if (current.length() == 2 * max) {
+            res.add(current);
+            return;
+        }
+        if (open < max) {
+            helper(max, current + "(", open + 1, close, res);
+        }
+        if (close < open) {
+            helper(max, current + ")", open, close + 1, res);
+        }
     }
 
     // s = "anagram", t = "nagaram"

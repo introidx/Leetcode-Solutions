@@ -10,6 +10,30 @@ public class ArraysQuestions {
         System.out.println(findK(input));
     }
 
+    public int longestConsecutive(int[] nums) {
+    //  Input: nums = [100,4,200,1,3,2]
+    //  Output: 4
+        Set<Integer> set = new HashSet<>();
+        for (int i : nums)
+            set.add(i);
+
+        int maxStreak =0;
+        for (int i : set){
+            if(!set.contains(i -1)){
+                int current = i;
+                int currentStreak = 1;
+
+                while(set.contains(current + 1)){
+                    current = current + 1;
+                    currentStreak++;
+                }
+
+                maxStreak = Math.max(maxStreak, currentStreak);
+            }
+        }
+        return maxStreak;
+    }
+
     public static boolean canReach(int nums[], int start){
         if(nums[start] == 0){
             return true;

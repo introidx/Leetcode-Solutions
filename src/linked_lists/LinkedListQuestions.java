@@ -76,10 +76,19 @@ class Linked {
     }
 
     public void printNodes(ListNode node) {
+        String s = "";
         while (node != null) {
-            System.out.println(node.val);
+            if(node.next == null){
+                s += node.val;
+            }else{
+                s += node.val + " -> ";
+            }
+
             node = node.next;
         }
+
+
+        System.out.println(s);
     }
 
     public boolean searchNode(ListNode node, int key) {
@@ -95,16 +104,16 @@ class Linked {
     }
 
     public ListNode reverseKGroup2(ListNode head, int k) {
-        int count =0;
+        int count = 0;
         ListNode curr = head;
 
-        while(curr != null && count != k){
+        while (curr != null && count != k) {
             curr = curr.next;
             count++;
         }
-        if(count == k){
+        if (count == k) {
             curr = reverseKGroup2(curr, k);
-            while(count-- >0){
+            while (count-- > 0) {
                 ListNode temp = head.next;
                 head.next = curr;
                 curr = head;
@@ -135,28 +144,11 @@ class Linked {
             i++;
         }
         if (first == last)
-            return new int[] {-1, -1};
-        return new int[] {mn, last - first};
+            return new int[]{-1, -1};
+        return new int[]{mn, last - first};
     }
 
-}
 
-
-class LinkedListPractice {
-
-
-    public static void main(String[] args) {
-        ListNode root = new ListNode();
-        Linked linkedList = new Linked();
-        linkedList.insert(root, 2);
-        linkedList.insert(root, 3);
-        linkedList.insert(root, 4);
-        linkedList.insert(root, 5);
-
-        linkedList.deleteNodeAtEnd(root.next);
-
-
-    }
 
 
     public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
@@ -253,61 +245,43 @@ class LinkedListPractice {
 
     public ListNode reverseKGroup(ListNode head, int k) {
         ListNode curr = head;
-        int count =0;
-        while(curr != null && count != k){
+        int count = 0;
+        while (curr != null && count != k) {
             curr = curr.next;
             count++;
         }
-        if (count == k){
+        if (count == k) {
             curr = reverseKGroup(curr, k);
-            while(count-- > 0){
+            while (count-- > 0) {
                 ListNode temp = head.next;
                 head.next = curr;
                 curr = head;
-                head= temp;
+                head = temp;
             }
             head = curr;
         }
 
         return head;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
 
     public ListNode reverseKGroup1(ListNode head, int k) {
         ListNode curr = head;
-        int count =0;
-        while(curr != null && count != k){
+        int count = 0;
+        while (curr != null && count != k) {
             count++;
             curr = curr.next;
         }
 
-        if(count == k){
+        if (count == k) {
             curr = reverseKGroup1(curr, k);
-            while(count-- > 0){
+            while (count-- > 0) {
                 ListNode temp = head.next;
                 head.next = curr;
                 curr = head;
-                head =temp;
+                head = temp;
             }
             head = curr;
 
@@ -315,6 +289,134 @@ class LinkedListPractice {
         return head;
     }
 
+    public static ListNode addTwoNumbers1(ListNode l1, ListNode l2) {
+        ListNode result = new ListNode(0);
+        ListNode p = result;
+
+        int carry =0;
+        while (l1 != null || l2 != null || carry != 0){
+            if(l1 != null){
+                carry += l1.val;
+                l1= l1.next;
+            }
+            if(l2 != null){
+                carry += l2.val;
+                l2 = l2.next;
+            }
+            p.next = new ListNode(carry % 10);
+            carry = carry / 10;
+            p = p.next;
+        }
+        return result.next;
+    }
+
+    public static ListNode deleteK(ListNode node, int k) {
+        ListNode dummy = node;
+        int sum = 0;
+        while (dummy != null) {
+            sum += dummy.val;
+            dummy = dummy.next;
+        }
+
+        while (sum > k && node != null) {
+            sum -= node.val;
+            node = node.next;
+        }
+        return node;
+    }
+
+
+    public static ListNode moveKNodesStartingFromNToFront(ListNode head, int n, int k) {
+       // Input: head = [1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 ] , n = 3 , k = 4
+       // output: 4 -> 5 -> 6 -> 7 -> 1 -> 2 -> 3 -> 8 -> 9
+
+        ListNode dummy = head;
+        ListNode dummy2 = dummy; // 1->2->3
+
+        int countN = 1;
+        while (countN < n) {
+            countN++;
+            dummy = dummy.next;
+        }
+
+        head = dummy.next;
+        ListNode firstHead = head; // 4 -> 5 -> 6 -> 7
+        dummy.next = null; // separate the first part
+
+        int countK = 1;
+        while (countK < k) {
+            firstHead = firstHead.next;
+            countK++;
+        }
+
+        ListNode lastHead = firstHead.next;
+        firstHead.next = dummy2; // this gives 4567... 123
+
+        while (firstHead.next != null){
+            firstHead = firstHead.next;
+        }
+
+        firstHead.next =lastHead;
+        return head;
+    }
+
+
+}
+
+
+class LinkedListPractice {
+
+
+    public static void main(String[] args) {
+        ListNode root = new ListNode();
+        Linked linkedList = new Linked();
+        linkedList.insert(root, 1);
+        linkedList.insert(root, 2);
+        linkedList.insert(root, 3);
+        linkedList.insert(root, 4);
+        linkedList.insert(root, 5);
+        linkedList.insert(root, 6);
+        linkedList.insert(root, 7);
+        linkedList.insert(root, 8);
+        linkedList.insert(root, 9);
+
+        linkedList.printNodes(root.next);
+        ListNode result = Linked.moveKNodesStartingFromNToFront(root.next, 3,4);
+        linkedList.printNodes(result);
+
+
+        // new Node
+        /*ListNode l1 = new ListNode(2);
+        Linked obj1 = new Linked();
+        obj1.insert(l1, 4);
+        obj1.insert(l1, 3);
+
+        obj1.printNodes(l1);
+
+        ListNode l2 = new ListNode(5);
+        Linked obj2 = new Linked();
+        obj2.insert(l2, 6);
+        obj2.insert(l2, 4);
+
+        obj1.printNodes(l2);
+
+        ListNode result = Linked.addTwoNumbers1(l1,l2);
+        obj1.printNodes(result);*/
+
+     /*   ListNode l1 = new ListNode(8);
+        Linked obj1 = new Linked();
+        obj1.insert(l1, 7);
+        obj1.insert(l1, 6);
+        obj1.insert(l1, 5);
+        obj1.insert(l1, 4);
+        obj1.insert(l1, 3);
+        obj1.insert(l1, 2);
+
+        obj1.printNodes(l1);
+        ListNode result = Linked.deleteK(l1, 14);
+        obj1.printNodes(result);
+*/
+    }
 
 
 }
