@@ -1,7 +1,5 @@
 package trees;
 
-import com.sun.source.tree.Tree;
-
 import java.util.*;
 
 class TreeNode {
@@ -18,7 +16,7 @@ class TreeNode {
 }
 
 class BST {
-    // insert into binary tree
+    /** insert into binary tree */
     public TreeNode insert(TreeNode treeNode, int val) {
         if (treeNode == null) {
             // if node is null create a new node and assign left and right
@@ -44,7 +42,7 @@ class BST {
         return treeNode;
     }
 
-    // delete node
+    /** delete node */
     public TreeNode deleteNode(TreeNode root, int key) {
         if (root == null) {
             return null;
@@ -75,7 +73,7 @@ class BST {
     }
 
 
-    // In order Traversal recursive
+    /** In order Traversal recursive */
     public void inOrderTraversalRecursive(TreeNode root) {
         if (root == null) return;
 
@@ -84,10 +82,10 @@ class BST {
         inOrderTraversalRecursive(root.right);
     }
 
-    // In order Traversal Iterative
-    public void inOrderTraversalIterative(TreeNode root) {
+    /** In order Traversal Iterative */
+    public List<Integer> inOrderTraversalIterative(TreeNode root) {
         List<Integer> list = new ArrayList<>();
-        if (root == null) return;
+        if (root == null) return null;
 
         Stack<TreeNode> stack = new Stack<>();
         while (!stack.isEmpty() || root != null) {
@@ -102,9 +100,10 @@ class BST {
             root = root.right;
         }
         // return list if want to
+        return list;
     }
 
-    // preOrder traversal recursive
+    /** preOrder traversal recursive */
     public void preOrderRecursive(TreeNode root) {
         if (root == null) return;
 
@@ -114,8 +113,8 @@ class BST {
     }
 
     // preOrder traversal Iterative
-    public void preOrderIterative(TreeNode root) {
-        if (root == null) return;
+    public List<Integer> preOrderIterative(TreeNode root) {
+        if (root == null) return null;
         List<Integer> list = new ArrayList<>();
 
         Stack<TreeNode> stack = new Stack<>();
@@ -135,9 +134,10 @@ class BST {
 
         }
         //return list if want to
+        return list;
     }
 
-    // post order Recursive
+    /** post order Recursive */
     public void postOrderRecursive(TreeNode root) {
         if (root == null) return;
 
@@ -147,8 +147,8 @@ class BST {
     }
 
     // post order Iterative
-    public void postOrderIterative(TreeNode root) {
-        if (root == null) return;
+    public List<Integer> postOrderIterative(TreeNode root) {
+        if (root == null) return null;
         List<Integer> list = new ArrayList<>();
 
         Stack<TreeNode> stack = new Stack<>();
@@ -166,11 +166,12 @@ class BST {
             }
         }
         // return list
+        return list;
     }
 
     // level Order traversal Iterative
-    public void levelOrder(TreeNode root) {
-        if (root == null) return;
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        if (root == null) return null;
 
         List<List<Integer>> list = new ArrayList<>();
         Queue<TreeNode> queue = new LinkedList<>();
@@ -195,10 +196,11 @@ class BST {
 
             list.add(oneLevel);
         }
+        return list;
         // return list
     }
 
-    // search node in tree node
+    /** search node in tree node */
     public boolean searchNode(TreeNode node, int val) {
         if (node == null) {
             return false;
@@ -220,7 +222,7 @@ class BST {
         return isPresent;
     }
 
-    // print alternate level nodes in binary tree
+    /** print alternate level nodes in binary tree */
     public static void printAlternateLevelNode(TreeNode root) {
         if (root == null) return;
 
@@ -251,6 +253,8 @@ class BST {
             }
         }
     }
+
+
 
     public static TreeNode sortedArrayToTree(int[] nums) {
         if (nums == null) return null;
@@ -357,7 +361,7 @@ class BST {
     }
 
     public boolean isValidBST(TreeNode root) {
-        if(root == null) return true;
+        if (root == null) return true;
         Stack<TreeNode> stack = new Stack<>();
         TreeNode pre = null;
 
@@ -386,46 +390,73 @@ class BST {
         helper(root);
 
         int temp = first.data;
-        first.data= second.data;
+        first.data = second.data;
         second.data = temp;
 
     }
 
-    public void helper(TreeNode root){
-        if(root == null) return;
+    public void helper(TreeNode root) {
+        if (root == null) return;
         helper(root.left);
 
-        if(first == null && (pre == null || pre.data >= root.data)){
+        if (first == null && (pre == null || pre.data >= root.data)) {
             first = pre;
         }
-        if(first != null && pre.data >= root.data){
+        if (first != null && pre.data >= root.data) {
             second = root;
         }
-        pre =root;
+        pre = root;
         helper(root.right);
 
     }
 
     public TreeNode invertTree(TreeNode root) {
-        if(root == null) return root;
+        if (root == null) return root;
         Queue<TreeNode> queue = new LinkedList<>();
         queue.add(root);
 
-        while(!queue.isEmpty()){
+        while (!queue.isEmpty()) {
             TreeNode current = queue.poll();
             TreeNode temp = current.left;
             current.left = current.right;
-            current.right= temp;
+            current.right = temp;
 
-            if(current.left != null){
+            if (current.left != null) {
                 queue.add(current.left);
             }
-            if(current.right != null){
+            if (current.right != null) {
                 queue.add(current.right);
             }
 
         }
         return root;
+    }
+
+    public TreeNode deleteNode1(TreeNode root, int targetNode) {
+        if (targetNode < root.data) {
+            root.left = deleteNode1(root.left, targetNode);
+        } else if (targetNode > root.data) {
+            root.right = deleteNode1(root.right, targetNode);
+        } else {
+            if (root.left == null) {
+                return root.right;
+            }
+            if (root.right == null) {
+                return root.left;
+            }
+
+            TreeNode minNode = findMin1(root.right);
+            root.data = minNode.data;
+            root.right = deleteNode1(root.right, root.data);
+        }
+        return root;
+    }
+
+    public static TreeNode findMin1(TreeNode node) {
+        if (node.left == null) {
+            node = node.left;
+        }
+        return node;
     }
 
 

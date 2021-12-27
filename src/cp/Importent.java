@@ -32,7 +32,7 @@ public class Importent {
 
     public static long fastPower(long a, long b, int n) {
         // power of two numbers with modulo n
-        /* Modulo Property
+        /** Modulo Property
         (a + b) % n = (a % n + b % n) % n
         (a * b) % n = (a % n * b % n) % n;
 

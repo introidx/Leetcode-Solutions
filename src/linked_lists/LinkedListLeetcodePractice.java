@@ -9,33 +9,97 @@ public class LinkedListLeetcodePractice {
         ListNode l1 = new ListNode(1);
         Linked obj1 = new Linked();
         obj1.insert(l1, 2);
+        obj1.insert(l1, 3);
         obj1.insert(l1, 4);
-
-        obj1.printNodes(l1);
-
-        ListNode l2 = new ListNode(1);
-        Linked obj2 = new Linked();
-        obj2.insert(l2, 3);
-        obj2.insert(l2, 4);
-
-        obj1.printNodes(l2);
-
-        ListNode result = mergeTwoListsRecursive(l1, l2);
-        obj1.printNodes(result);
-
-/*        ListNode l1 = new ListNode(8);
-        Linked obj1 = new Linked();
+        obj1.insert(l1, 5);
+        obj1.insert(l1, 6);
         obj1.insert(l1, 7);
-//        obj1.insert(l1, 6);
-//        obj1.insert(l1, 5);
-//        obj1.insert(l1, 4);
-//        obj1.insert(l1, 3);
-//        obj1.insert(l1, 2);
+        obj1.insert(l1, 8);
 
         obj1.printNodes(l1);
-        ListNode result = removeNthFromEnd(l1,1);
-        obj1.printNodes(result);*/
+        boolean b = isPalindrome(l1);
+//        ListNode result = reverseKGroup(l1,2);
+//        obj1.printNodes(result);
 
+
+    }
+
+    public ListNode mergeKLists1(ListNode[] lists) {
+        if (lists == null || lists.length == 0) return null;
+
+        PriorityQueue<ListNode> queue = new PriorityQueue<>((list1, list2) -> list1.val - list2.val);
+        for (ListNode list : lists) {
+            if (list != null) {
+                queue.add(list);
+            }
+        }
+
+        ListNode dummy = new ListNode(0);
+        ListNode tail = dummy.next;
+
+        while (!queue.isEmpty()){
+            tail.next = queue.poll();
+            tail= tail.next;
+
+            if(tail.next != null){
+                queue.add(tail.next);
+            }
+        }
+        return dummy.next;
+
+    }
+
+    public static boolean isPalindrome(ListNode head) {
+        if (head == null) return true;
+        ListNode fast = head, slow = head;
+
+        /** find middle element */
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        /** when the length is odd */
+        if (fast != null) slow = slow.next;
+
+
+        /** reverse the second half */
+        ListNode prev = null;
+        while (slow != null) {
+            ListNode temp = slow.next;
+            slow.next = prev;
+            prev = slow;
+            slow = temp;
+        }
+
+        /** compare the first and second half */
+        slow = prev;
+        while (slow != null) {
+            if (head.val != slow.val) return false;
+            head = head.next;
+            slow = slow.next;
+        }
+        return true;
+    }
+
+    public static ListNode reverseKGroup(ListNode head, int k) {
+        ListNode curr = head;
+        int count = 0;
+        while (curr != null && count != k) {
+            curr = curr.next;
+            count++;
+        }
+        // at this point curr is 3.4.5..
+        if (count == k) {
+            curr = reverseKGroup(curr, k);
+            while (count-- > 0) {
+                ListNode tmp = head.next;
+                head.next = curr;
+                curr = head;
+                head = tmp;
+            }
+            head = curr;
+        }
+        return head;
     }
 
     public static ListNode mergeKLists(ListNode[] lists) {
